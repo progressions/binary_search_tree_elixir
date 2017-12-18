@@ -41,16 +41,10 @@ defmodule BinarySearchTreeTest do
   end
 
   test "balance a very unbalanced tree" do
-    tree = BinarySearchTree.insert(nil, 0)
-    |> BinarySearchTree.insert(1)
-    |> BinarySearchTree.insert(2)
-    |> BinarySearchTree.insert(3)
-    |> BinarySearchTree.insert(4)
-    |> BinarySearchTree.insert(5)
-    |> BinarySearchTree.insert(6)
-    |> BinarySearchTree.insert(7)
-    |> BinarySearchTree.insert(8)
-    |> BinarySearchTree.insert(9)
+    tree = Enum.to_list(0..9)
+    |> Enum.reduce(nil, fn(data, root) ->
+      BinarySearchTree.insert(root, data)
+    end)
 
     balanced_tree = BinarySearchTree.balance(tree)
     assert BinarySearchTree.level_order(balanced_tree) |> Enum.map(&(&1.data)) == [5, 2, 8, 1, 4, 7, 9, 0, 3, 6]
@@ -132,5 +126,26 @@ defmodule BinarySearchTreeTest do
   test "delete 19 from the tree, it has two children", state do
     tree = BinarySearchTree.delete(state.tree, 19)
     assert BinarySearchTree.level_order(tree) |> Enum.map(&(&1.data)) == [10, -6, 21, 0, 15]
+  end
+
+  test "compare two identical trees", state do
+    tree = BinarySearchTree.level_order(state.tree)
+    |> Enum.map(&(&1.data))
+    |> Enum.reduce(nil, fn(data, root) ->
+      BinarySearchTree.insert(root, data)
+    end)
+    assert BinarySearchTree.compare(state.tree, tree) == true
+  end
+
+  test "compare two slightly different trees", state do
+    tree = [10, -6, 19, 15, 21]
+    |> Enum.reduce(nil, fn(data, root) ->
+      BinarySearchTree.insert(root, data)
+    end)
+    assert BinarySearchTree.compare(state.tree, tree) == false
+  end
+
+  test "sum the tree", state do
+    assert BinarySearchTree.sum(state.tree) == 59
   end
 end

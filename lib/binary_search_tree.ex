@@ -202,4 +202,27 @@ defmodule BinarySearchTree do
     |> delete(root.left, data)
     |> delete(root.right, data)
   end
+
+  @doc """
+  Compare two trees and return true if they are identical in values and structure.
+
+  """
+  def compare(nil, nil), do: true
+  def compare(nil, _), do: false
+  def compare(_, nil), do: false
+  def compare(node1, node2) do
+    compare(node1.left, node2.left) && compare(node1.right, node2.right)
+  end
+
+  @doc """
+  Sum the values of all the nodes in the tree.
+
+  """
+  def sum(node), do: sum(0, node)
+  defp sum(acc, nil), do: acc
+  defp sum(acc, node) do
+    acc + node.data
+    |> sum(node.left)
+    |> sum(node.right)
+  end
 end
