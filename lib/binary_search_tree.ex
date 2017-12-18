@@ -17,12 +17,10 @@ defmodule BinarySearchTree do
 
   """
   def insert(nil, data), do: %Node{data: data}
-  def insert(%{data: node_data}=node, data) when data > node_data do
+  def insert(%{data: node_data}=node, data) when data > node_data, do:
     %Node{data: node.data, left: node.left, right: insert(node.right, data)}
-  end
-  def insert(%{data: node_data}=node, data) when data < node_data do
+  def insert(%{data: node_data}=node, data) when data < node_data, do:
     %Node{data: node.data, left: insert(node.left, data), right: node.right}
-  end
   def insert(node, _), do: node
 
   @doc """
