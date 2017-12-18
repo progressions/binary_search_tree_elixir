@@ -16,7 +16,6 @@ defmodule BinarySearchTree do
       %BinarySearchTree.Node{data: 10, left: nil, right: nil}
 
   """
-
   def insert(nil, data), do: %Node{data: data}
   def insert(node, data) do
     cond do
@@ -29,6 +28,16 @@ defmodule BinarySearchTree do
     end
   end
 
+  @doc """
+  Compile an in-order collection of the tree's data.
+
+  An in-order collection is made by recursively collecting:
+
+    - the current node's left tree
+    - the current node
+    - the current node's right tree
+
+  """
   def in_order(node) do
     in_order([], node)
     |> Enum.reverse
@@ -36,10 +45,20 @@ defmodule BinarySearchTree do
 
   defp in_order(acc, nil), do: acc
   defp in_order(acc, node) do
-    [node.data | in_order(acc, node.left)]
+    [node | in_order(acc, node.left)]
     |> in_order(node.right)
   end
 
+  @doc """
+  Compile a pre-order collection of the tree's data.
+
+  An pre-order collection is made by recursively collecting:
+
+    - the current node
+    - the current node's left tree
+    - the current node's right tree
+
+  """
   def pre_order(node) do
     pre_order([], node)
     |> Enum.reverse
@@ -47,11 +66,21 @@ defmodule BinarySearchTree do
 
   defp pre_order(acc, nil), do: acc
   defp pre_order(acc, node) do
-    [node.data | acc]
+    [node | acc]
     |> pre_order(node.left)
     |> pre_order(node.right)
   end
 
+  @doc """
+  Compile a post-order collection of the tree's data.
+
+  An post-order collection is made by recursively collecting:
+
+    - the current node's left tree
+    - the current node's right tree
+    - the current node
+
+  """
   def post_order(node) do
     post_order([], node)
     |> Enum.reverse
@@ -59,11 +88,18 @@ defmodule BinarySearchTree do
 
   defp post_order(acc, nil), do: acc
   defp post_order(acc, node) do
-    [ node.data |
+    [ node |
       post_order(acc, node.left)
       |> post_order(node.right) ]
   end
 
+  @doc """
+  Compile a level-order collection of the tree's data.
+
+  An level-order collection is made by recursively collecting each
+  level of the tree.
+
+  """
   def level_order(node), do: Enum.reverse(level_order([node], []))
 
   defp level_order([], acc), do: acc
@@ -72,9 +108,13 @@ defmodule BinarySearchTree do
     queue = queue ++ [node.left]
     queue = queue ++ [node.right]
 
-    level_order(queue, [node.data|acc])
+    level_order(queue, [node|acc])
   end
 
+  @doc """
+  Find an element in the tree with the given data.
+
+  """
   def find(%{data: data}=node, data), do: node
   def find(nil, _), do: nil
   def find(node, data) do
@@ -83,7 +123,7 @@ defmodule BinarySearchTree do
 
   def next_smallest(%{left: node}, _) when is_map(node), do: largest(node)
   def next_smallest(node, root), do: next_smallest(node, root, nil)
-  def next_smallest(node, root, successor) do
+  defp next_smallest(node, root, successor) do
     cond do
       node.data < root.data ->
         next_smallest(node, root.left, successor)
@@ -96,7 +136,7 @@ defmodule BinarySearchTree do
 
   def next_largest(%{right: node}, _) when is_map(node), do: smallest(node)
   def next_largest(node, root), do: next_largest(node, root, nil)
-  def next_largest(node, root, successor) do
+  defp next_largest(node, root, successor) do
     cond do
       node.data < root.data ->
         next_largest(node, root.left, root)
@@ -107,12 +147,9 @@ defmodule BinarySearchTree do
     end
   end
 
-  def smallest(root), do: walk_left(root)
-  def largest(root), do: walk_right(root)
+  def largest(%{right: nil}=node), do: node
+  def largest(%{right: node}), do: largest(node)
 
-  defp walk_right(%{right: nil}=node), do: node
-  defp walk_right(%{right: node}), do: walk_right(node)
-
-  defp walk_left(%{left: nil}=node), do: node
-  defp walk_left(%{left: node}), do: walk_left(node)
+  def smallest(%{left: nil}=node), do: node
+  def smallest(%{left: node}), do: smallest(node)
 end
