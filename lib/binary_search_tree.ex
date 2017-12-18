@@ -198,8 +198,8 @@ defmodule BinarySearchTree do
     %{data: d} = smallest(right)
 
     insert(acc, d)
-    |> delete(left, d)
-    |> delete(right, d)
+    |> delete(left, data)
+    |> delete(right, data)
   end
 
   defp delete(acc, root, data) do
