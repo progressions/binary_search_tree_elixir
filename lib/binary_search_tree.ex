@@ -1,6 +1,6 @@
 defmodule BinarySearchTree do
   defmodule Node do
-    defstruct data: nil, parent: nil, left: nil, right: nil
+    defstruct data: nil, left: nil, right: nil
   end
 
   @moduledoc """
@@ -18,15 +18,12 @@ defmodule BinarySearchTree do
   """
 
   def insert(nil, data), do: %Node{data: data}
-  def insert(node, data), do: insert(node, data, node.parent)
-
-  defp insert(nil, data, parent), do: %Node{data: data, parent: parent}
-  defp insert(node, data, parent) do
+  def insert(node, data) do
     cond do
       data > node.data ->
-        %Node{data: node.data, parent: parent, left: node.left, right: insert(node.right, data, node)}
+        %Node{data: node.data, left: node.left, right: insert(node.right, data)}
       data < node.data ->
-        %Node{data: node.data, parent: parent, left: insert(node.left, data, node), right: node.right}
+        %Node{data: node.data, left: insert(node.left, data), right: node.right}
       true ->
         node
     end
@@ -86,29 +83,13 @@ defmodule BinarySearchTree do
 
   # def next_smallest(%{left: node}), do: walk_right(node)
   def next_smallest(node) do
-    IO.inspect(node)
-    IO.puts("\n")
     cond do
       node.left ->
         walk_right(node.left)
-      node.parent ->
-        walk_up(node)
       true -> nil
     end
   end
 
   defp walk_right(%{right: nil}=node), do: node
   defp walk_right(%{right: node}), do: walk_right(node)
-
-  defp walk_up(node) do
-    IO.inspect(node)
-    IO.inspect(node.parent)
-    IO.inspect(node.parent.right)
-    cond do
-      node.parent.right == node ->
-        node.parent
-      true ->
-        raise "WTF"
-    end
-  end
 end

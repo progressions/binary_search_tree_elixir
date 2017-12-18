@@ -19,26 +19,19 @@ defmodule BinarySearchTreeTest do
   end
 
   test "insert first node" do
-    assert BinarySearchTree.insert(nil, 10) == %BinarySearchTree.Node{data: 10, parent: nil, left: nil, right: nil}
+    assert BinarySearchTree.insert(nil, 10).data == 10
+    assert BinarySearchTree.insert(nil, 10).left == nil
+    assert BinarySearchTree.insert(nil, 10).right == nil
   end
 
   test "insert second node" do
     node = BinarySearchTree.insert(nil, 10)
-    assert BinarySearchTree.insert(node, 19) == %BinarySearchTree.Node{data: 10, left: nil, parent: nil, right: %BinarySearchTree.Node{data: 19, left: nil, right: nil, parent: %BinarySearchTree.Node{data: 10, left: nil, parent: nil, right: nil}}}
-  end
-
-  test "insert sets parent" do
-    node = BinarySearchTree.insert(nil, 10)
-           |> BinarySearchTree.insert(19)
-
-    assert node.data == 10
-    assert node.right.data == 19
-    assert node.right.parent.data == 10
+    assert BinarySearchTree.insert(node, 19).right.data == 19
   end
 
   test "insert lesser value" do
     node = BinarySearchTree.insert(nil, 10)
-    assert BinarySearchTree.insert(node, 9) == %BinarySearchTree.Node{data: 10, parent: nil, right: nil, left: %BinarySearchTree.Node{data: 9, left: nil, right: nil, parent: %BinarySearchTree.Node{data: 10, left: nil, parent: nil, right: nil}}}
+    assert BinarySearchTree.insert(node, 9).left.data == 9
   end
 
   test "in_order traversal", state do
@@ -71,27 +64,5 @@ defmodule BinarySearchTreeTest do
 
   test "next smallest from 10 is 0", state do
     assert BinarySearchTree.next_smallest(state.tree).data == 0
-  end
-
-  test "next smallest from 0 is -6", state do
-    assert BinarySearchTree.next_smallest(state.node_0).data == -6
-  end
-
-  test "next smallest from 21 is 19", state do
-    node_21 = state.tree.right.right
-    assert state.tree.data == 10
-    assert state.tree.right.data == 19
-    assert state.tree.right.parent.data == 10
-    assert state.tree.right.parent.right.data == 19
-    assert state.tree.right.right == state.node_21
-    assert node_21.parent.data == 19
-    IO.inspect(node_21)
-    # assert BinarySearchTree.next_smallest(state.node_21).data == 19
-  end
-
-  test "next smallest from 4 is 0", state do
-    tree = BinarySearchTree.insert(state.tree, 4)
-    node_4 = BinarySearchTree.find(tree, 4)
-    # assert BinarySearchTree.next_smallest(node_4).data = 0
   end
 end
