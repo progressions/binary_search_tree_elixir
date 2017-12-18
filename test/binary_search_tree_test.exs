@@ -36,19 +36,19 @@ defmodule BinarySearchTreeTest do
   end
 
   test "in_order traversal", state do
-    assert BinarySearchTree.in_order(state.tree) |> Enum.map(fn(n) -> n.data end) == [-6, 0, 10, 15, 19, 21]
+    assert BinarySearchTree.in_order(state.tree) |> Enum.map(&(&1.data)) == [-6, 0, 10, 15, 19, 21]
   end
 
   test "pre_order traversal", state do
-    assert BinarySearchTree.pre_order(state.tree) |> Enum.map(fn(n) -> n.data end) == [10, -6, 0, 19, 15, 21]
+    assert BinarySearchTree.pre_order(state.tree) |> Enum.map(&(&1.data)) == [10, -6, 0, 19, 15, 21]
   end
 
   test "post_order traversal", state do
-    assert BinarySearchTree.post_order(state.tree) |> Enum.map(fn(n) -> n.data end) == [0, -6, 15, 21, 19, 10]
+    assert BinarySearchTree.post_order(state.tree) |> Enum.map(&(&1.data)) == [0, -6, 15, 21, 19, 10]
   end
 
   test "level_order traversal", state do
-    assert BinarySearchTree.level_order(state.tree) |> Enum.map(fn(n) -> n.data end) == [10, -6, 19, 0, 15, 21]
+    assert BinarySearchTree.level_order(state.tree) |> Enum.map(&(&1.data)) == [10, -6, 19, 0, 15, 21]
   end
 
   test "find data in self" do
