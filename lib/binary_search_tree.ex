@@ -182,4 +182,29 @@ defmodule BinarySearchTree do
   """
   def smallest(%{left: nil}=node), do: node
   def smallest(%{left: node}), do: smallest(node)
+
+  @doc """
+  Delete a given element from the tree and move its children into place.
+
+  Return a new version of the tree without the element in place.
+
+  """
+  def delete(root, data), do: delete(nil, root, data)
+  defp delete(acc, nil, _), do: acc
+  defp delete(acc, %{data: data, left: nil, right: nil}, data), do: acc
+  defp delete(acc, %{data: data, left: nil, right: right}, data), do: delete(acc, right, data)
+  defp delete(acc, %{data: data, left: left, right: nil}, data), do: delete(acc, left, data)
+  defp delete(acc, %{data: data, left: left, right: right}, data) do
+    %{data: d} = smallest(right)
+
+    insert(acc, d)
+    |> delete(left, d)
+    |> delete(right, d)
+  end
+
+  defp delete(acc, root, data) do
+    insert(acc, root.data)
+    |> delete(root.left, data)
+    |> delete(root.right, data)
+  end
 end

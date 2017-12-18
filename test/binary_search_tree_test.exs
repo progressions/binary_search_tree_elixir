@@ -73,6 +73,16 @@ defmodule BinarySearchTreeTest do
     assert BinarySearchTree.level_order(state.tree) |> Enum.map(&(&1.data)) == [10, -6, 19, 0, 15, 21]
   end
 
+  test "you can rebuild the tree from the level_order traversal", state do
+    tree = BinarySearchTree.level_order(state.tree)
+    |> Enum.map(&(&1.data))
+    |> Enum.reduce(nil, fn(data, node) ->
+      BinarySearchTree.insert(node, data)
+    end)
+
+    assert BinarySearchTree.level_order(tree) |> Enum.map(&(&1.data)) == [10, -6, 19, 0, 15, 21]
+  end
+
   test "find data in self" do
     assert BinarySearchTree.find(%BinarySearchTree.Node{data: 10, left: nil, right: nil}, 10).data == 10
   end
@@ -107,5 +117,20 @@ defmodule BinarySearchTreeTest do
 
   test "next_largest of 0 is 10", state do
     assert BinarySearchTree.next_largest(state.node_0, state.tree).data == 10
+  end
+
+  test "delete 0 from tree, it has no children", state do
+    tree = BinarySearchTree.delete(state.tree, 0)
+    assert BinarySearchTree.level_order(tree) |> Enum.map(&(&1.data)) == [10, -6, 19, 15, 21]
+  end
+
+  test "delete -6 from the tree, it has one child", state do
+    tree = BinarySearchTree.delete(state.tree, -6)
+    assert BinarySearchTree.level_order(tree) |> Enum.map(&(&1.data)) == [10, 0, 19, 15, 21]
+  end
+
+  test "delete 19 from the tree, it has two children", state do
+    tree = BinarySearchTree.delete(state.tree, 19)
+    assert BinarySearchTree.level_order(tree) |> Enum.map(&(&1.data)) == [10, -6, 21, 0, 15]
   end
 end
