@@ -28,6 +28,10 @@ defmodule BinarySearchTree do
     end
   end
 
+  @doc """
+  Balance a tree into an even distribution of left and right branches.
+
+  """
   def balance(node) when is_map(node), do: balance(in_order(node))
   def balance([]), do: nil
   def balance([node]), do: %Node{data: node.data, left: nil, right: nil}
