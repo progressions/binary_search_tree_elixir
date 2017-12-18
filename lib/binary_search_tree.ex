@@ -17,7 +17,6 @@ defmodule BinarySearchTree do
 
   """
   def insert(nil, data), do: %Node{data: data}
-  # try using a guard clause `when data > node.data`
   def insert(%{data: node_data}=node, data) when data > node_data do
     %Node{data: node.data, left: node.left, right: insert(node.right, data)}
   end
