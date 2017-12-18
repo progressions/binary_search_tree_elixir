@@ -121,6 +121,10 @@ defmodule BinarySearchTree do
     find(node.left, data) || find(node.right, data)
   end
 
+  @doc """
+  Find the element with the next smallest data given a node and the root node.
+
+  """
   def next_smallest(%{left: node}, _) when is_map(node), do: largest(node)
   def next_smallest(node, root), do: next_smallest(node, root, nil)
   defp next_smallest(node, root, successor) do
@@ -134,6 +138,10 @@ defmodule BinarySearchTree do
     end
   end
 
+  @doc """
+  Find the element with the next largest data given a node and the root node.
+
+  """
   def next_largest(%{right: node}, _) when is_map(node), do: smallest(node)
   def next_largest(node, root), do: next_largest(node, root, nil)
   defp next_largest(node, root, successor) do
@@ -147,9 +155,17 @@ defmodule BinarySearchTree do
     end
   end
 
+  @doc """
+  Find the element with the largest data in the entire tree.
+
+  """
   def largest(%{right: nil}=node), do: node
   def largest(%{right: node}), do: largest(node)
 
+  @doc """
+  Find the element with the smallest data in the entire tree.
+
+  """
   def smallest(%{left: nil}=node), do: node
   def smallest(%{left: node}), do: smallest(node)
 end
