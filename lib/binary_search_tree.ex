@@ -136,16 +136,12 @@ defmodule BinarySearchTree do
   """
   def next_smallest(%Node{left: node}, _) when is_map(node), do: largest(node)
   def next_smallest(node, root), do: next_smallest(node, root, nil)
-  defp next_smallest(node, root, successor) do
-    cond do
-      node.data < root.data ->
-        next_smallest(node, root.left, successor)
-      node.data > root.data ->
-        next_smallest(node, root.right, root)
-      true ->
-        successor
-    end
-  end
+
+  defp next_smallest(%Node{data: node_data}=node, %Node{data: root_data, left: left}, successor)
+    when node_data < root_data, do: next_smallest(node, left, successor)
+  defp next_smallest(%Node{data: node_data}=node, %Node{data: root_data, right: right}=root, _)
+    when node_data > root_data, do: next_smallest(node, right, root)
+  defp next_smallest(_, _, successor), do: successor
 
   @doc """
   Find the element with the next largest data given a node and the root node.
@@ -153,16 +149,12 @@ defmodule BinarySearchTree do
   """
   def next_largest(%Node{right: node}, _) when is_map(node), do: smallest(node)
   def next_largest(node, root), do: next_largest(node, root, nil)
-  defp next_largest(node, root, successor) do
-    cond do
-      node.data < root.data ->
-        next_largest(node, root.left, root)
-      node.data > root.data ->
-        next_largest(node, root.right, successor)
-      true ->
-        successor
-    end
-  end
+
+  defp next_largest(%Node{data: node_data}=node, %Node{data: root_data, left: left}=root, _)
+    when node_data < root_data, do: next_largest(node, left, root)
+  defp next_largest(%Node{data: node_data}=node, %Node{data: root_data, right: right}, successor)
+    when node_data > root_data, do: next_largest(node, right, successor)
+  defp next_largest(_, _, successor), do: successor
 
   @doc """
   Find the element with the largest data in the entire tree.
@@ -211,7 +203,8 @@ defmodule BinarySearchTree do
   def compare(nil, _), do: false
   def compare(_, nil), do: false
   def compare(node1, node2) do
-    compare(node1.left, node2.left) && compare(node1.right, node2.right)
+    compare(node1.left, node2.left)
+    && compare(node1.right, node2.right)
   end
 
   @doc """
