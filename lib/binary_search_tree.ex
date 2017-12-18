@@ -113,15 +113,13 @@ defmodule BinarySearchTree do
   level of the tree.
 
   """
-  def level_order(node), do: Enum.reverse(level_order([node], []))
+  def level_order(node), do: level_order([node], [])
 
   defp level_order([], acc), do: acc
   defp level_order([nil|queue], acc), do: level_order(queue, acc)
   defp level_order([node|queue], acc) do
-    queue = queue ++ [node.left]
-    queue = queue ++ [node.right]
-
-    level_order(queue, [node|acc])
+    queue ++ [node.left, node.right]
+    |> level_order(acc ++ [node])
   end
 
   @doc """
