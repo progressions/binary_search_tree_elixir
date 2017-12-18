@@ -54,12 +54,12 @@ defmodule BinarySearchTree do
   """
   def in_order(node) do
     in_order([], node)
-    |> Enum.reverse
   end
 
   defp in_order(acc, nil), do: acc
   defp in_order(acc, node) do
-    [node | in_order(acc, node.left)]
+    in_order(acc, node.left)
+    ++ [node]
     |> in_order(node.right)
   end
 
@@ -97,14 +97,13 @@ defmodule BinarySearchTree do
   """
   def post_order(node) do
     post_order([], node)
-    |> Enum.reverse
   end
 
   defp post_order(acc, nil), do: acc
   defp post_order(acc, node) do
-    [ node |
-      post_order(acc, node.left)
-      |> post_order(node.right) ]
+    (post_order(acc, node.left)
+    |> post_order(node.right))
+    ++ [node]
   end
 
   @doc """
