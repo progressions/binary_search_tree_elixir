@@ -13,9 +13,10 @@ defmodule BinarySearchTreeTest do
     node_21 = BinarySearchTree.find(tree, 21)
     node_19 = BinarySearchTree.find(tree, 19)
     node_15 = BinarySearchTree.find(tree, 15)
+    node_10 = BinarySearchTree.find(tree, 10)
     node_0 = BinarySearchTree.find(tree, 0)
 
-    {:ok, tree: tree, node_21: node_21, node_19: node_19, node_15: node_15, node_0: node_0}
+    {:ok, tree: tree, node_21: node_21, node_19: node_19, node_15: node_15, node_10: node_10, node_0: node_0}
   end
 
   test "insert first node" do
@@ -58,11 +59,31 @@ defmodule BinarySearchTreeTest do
     assert BinarySearchTree.find(state.tree, 19) == state.node_19
   end
 
-  test "next smallest from 19 is 15", state do
-    assert BinarySearchTree.next_smallest(state.node_19).data == 15
+  test "smallest of whole tree is -6", state do
+    assert BinarySearchTree.smallest(state.tree).data == -6
   end
 
-  test "next smallest from 10 is 0", state do
-    assert BinarySearchTree.next_smallest(state.tree).data == 0
+  test "largest of whole tree is 21", state do
+    assert BinarySearchTree.largest(state.tree).data == 21
+  end
+
+  test "next_smallest of 10 is 0", state do
+    assert BinarySearchTree.next_smallest(state.tree, state.tree).data == 0
+  end
+
+  test "next_smallest of 21 is 19", state do
+    assert BinarySearchTree.next_smallest(state.node_21, state.tree).data == 19
+  end
+
+  test "next_smallest of 15 is 10", state do
+    assert BinarySearchTree.next_smallest(state.node_15, state.tree).data == 10
+  end
+
+  test "next_largest of 10 is 15", state do
+    assert BinarySearchTree.next_largest(state.node_10, state.tree).data == 15
+  end
+
+  test "next_largest of 0 is 10", state do
+    assert BinarySearchTree.next_largest(state.node_0, state.tree).data == 10
   end
 end

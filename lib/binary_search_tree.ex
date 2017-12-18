@@ -81,16 +81,38 @@ defmodule BinarySearchTree do
     find(node.left, data) || find(node.right, data)
   end
 
-  # def next_smallest(%{left: node}), do: walk_right(node)
-  def next_smallest(root, node) do
-  end
-  defp next_smallest(acc, nil, root), do: acc
-  defp next_smallest(acc, node, root) do
-    [node.data | in_order(acc, node.left)]
-    |> in_order(node.right)
+  def next_smallest(%{left: node}, _) when is_map(node), do: largest(node)
+  def next_smallest(node, root), do: next_smallest(node, root, nil)
+  def next_smallest(node, root, successor) do
+    cond do
+      node.data < root.data ->
+        next_smallest(node, root.left, successor)
+      node.data > root.data ->
+        next_smallest(node, root.right, root)
+      true ->
+        successor
+    end
   end
 
+  def next_largest(%{right: node}, _) when is_map(node), do: smallest(node)
+  def next_largest(node, root), do: next_largest(node, root, nil)
+  def next_largest(node, root, successor) do
+    cond do
+      node.data < root.data ->
+        next_largest(node, root.left, root)
+      node.data > root.data ->
+        next_largest(node, root.right, successor)
+      true ->
+        successor
+    end
+  end
+
+  def smallest(root), do: walk_left(root)
+  def largest(root), do: walk_right(root)
 
   defp walk_right(%{right: nil}=node), do: node
   defp walk_right(%{right: node}), do: walk_right(node)
+
+  defp walk_left(%{left: nil}=node), do: node
+  defp walk_left(%{left: node}), do: walk_left(node)
 end
