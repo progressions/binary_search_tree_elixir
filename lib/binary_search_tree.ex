@@ -28,6 +28,20 @@ defmodule BinarySearchTree do
     end
   end
 
+  def balance(node) when is_map(node), do: balance(in_order(node))
+  def balance([]), do: nil
+  def balance(list) do
+    mid = div(length(list), 2)
+    {left, right} = Enum.split(list, mid)
+
+    cond do
+      right == [] ->
+        nil
+      [node|tail] = right ->
+        %Node{data: node.data, left: balance(left), right: balance(tail)}
+    end
+  end
+
   @doc """
   Compile an in-order collection of the tree's data.
 

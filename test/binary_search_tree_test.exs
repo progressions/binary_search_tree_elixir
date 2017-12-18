@@ -35,6 +35,28 @@ defmodule BinarySearchTreeTest do
     assert BinarySearchTree.insert(node, 9).left.data == 9
   end
 
+  test "balance", state do
+    balanced_tree = BinarySearchTree.balance(state.tree)
+    assert BinarySearchTree.level_order(balanced_tree) |> Enum.map(&(&1.data)) == [15, 0, 21, -6, 10, 19]
+  end
+
+  test "balance a very unbalanced tree" do
+    tree = BinarySearchTree.insert(nil, 0)
+    |> BinarySearchTree.insert(1)
+    |> BinarySearchTree.insert(2)
+    |> BinarySearchTree.insert(3)
+    |> BinarySearchTree.insert(4)
+    |> BinarySearchTree.insert(5)
+    |> BinarySearchTree.insert(6)
+    |> BinarySearchTree.insert(7)
+    |> BinarySearchTree.insert(8)
+    |> BinarySearchTree.insert(9)
+
+    balanced_tree = BinarySearchTree.balance(tree)
+    assert BinarySearchTree.level_order(balanced_tree) |> Enum.map(&(&1.data)) == [5, 2, 8, 1, 4, 7, 9, 0, 3, 6]
+    assert BinarySearchTree.in_order(balanced_tree) |> Enum.map(&(&1.data)) == [0,1,2,3,4,5,6,7,8,9]
+  end
+
   test "in_order traversal", state do
     assert BinarySearchTree.in_order(state.tree) |> Enum.map(&(&1.data)) == [-6, 0, 10, 15, 19, 21]
   end
