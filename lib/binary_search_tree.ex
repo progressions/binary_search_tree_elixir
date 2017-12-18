@@ -82,13 +82,14 @@ defmodule BinarySearchTree do
   end
 
   # def next_smallest(%{left: node}), do: walk_right(node)
-  def next_smallest(node) do
-    cond do
-      node.left ->
-        walk_right(node.left)
-      true -> nil
-    end
+  def next_smallest(root, node) do
   end
+  defp next_smallest(acc, nil, root), do: acc
+  defp next_smallest(acc, node, root) do
+    [node.data | in_order(acc, node.left)]
+    |> in_order(node.right)
+  end
+
 
   defp walk_right(%{right: nil}=node), do: node
   defp walk_right(%{right: node}), do: walk_right(node)
