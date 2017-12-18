@@ -75,12 +75,11 @@ defmodule BinarySearchTree do
   """
   def pre_order(node) do
     pre_order([], node)
-    |> Enum.reverse
   end
 
   defp pre_order(acc, nil), do: acc
   defp pre_order(acc, node) do
-    [node | acc]
+    acc ++ [node]
     |> pre_order(node.left)
     |> pre_order(node.right)
   end
