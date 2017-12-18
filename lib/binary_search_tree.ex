@@ -54,12 +54,12 @@ defmodule BinarySearchTree do
   """
   def in_order(node) do
     in_order([], node)
-    |> Enum.reverse
   end
 
   defp in_order(acc, nil), do: acc
   defp in_order(acc, node) do
-    [node | in_order(acc, node.left)]
+    in_order(acc, node.left)
+    ++ [node]
     |> in_order(node.right)
   end
 
@@ -75,12 +75,11 @@ defmodule BinarySearchTree do
   """
   def pre_order(node) do
     pre_order([], node)
-    |> Enum.reverse
   end
 
   defp pre_order(acc, nil), do: acc
   defp pre_order(acc, node) do
-    [node | acc]
+    acc ++ [node]
     |> pre_order(node.left)
     |> pre_order(node.right)
   end
@@ -97,14 +96,13 @@ defmodule BinarySearchTree do
   """
   def post_order(node) do
     post_order([], node)
-    |> Enum.reverse
   end
 
   defp post_order(acc, nil), do: acc
   defp post_order(acc, node) do
-    [ node |
-      post_order(acc, node.left)
-      |> post_order(node.right) ]
+    (post_order(acc, node.left)
+    |> post_order(node.right))
+    ++ [node]
   end
 
   @doc """
@@ -114,15 +112,13 @@ defmodule BinarySearchTree do
   level of the tree.
 
   """
-  def level_order(node), do: Enum.reverse(level_order([node], []))
+  def level_order(node), do: level_order([node], [])
 
   defp level_order([], acc), do: acc
   defp level_order([nil|queue], acc), do: level_order(queue, acc)
   defp level_order([node|queue], acc) do
-    queue = queue ++ [node.left]
-    queue = queue ++ [node.right]
-
-    level_order(queue, [node|acc])
+    queue ++ [node.left, node.right]
+    |> level_order(acc ++ [node])
   end
 
   @doc """
