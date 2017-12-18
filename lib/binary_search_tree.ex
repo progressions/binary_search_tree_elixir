@@ -30,16 +30,12 @@ defmodule BinarySearchTree do
 
   def balance(node) when is_map(node), do: balance(in_order(node))
   def balance([]), do: nil
+  def balance([node]), do: %Node{data: node.data, left: nil, right: nil}
   def balance(list) do
     mid = div(length(list), 2)
-    {left, right} = Enum.split(list, mid)
+    {left, [node|right]} = Enum.split(list, mid)
 
-    cond do
-      right == [] ->
-        nil
-      [node|tail] = right ->
-        %Node{data: node.data, left: balance(left), right: balance(tail)}
-    end
+    %Node{data: node.data, left: balance(left), right: balance(right)}
   end
 
   @doc """
