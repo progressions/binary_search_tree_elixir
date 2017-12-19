@@ -46,7 +46,7 @@ defmodule BinarySearchTree do
                     right: %BinarySearchTree.Node{data: 4, left: nil, right: nil}}
   """
   @spec create(list) :: tree
-  def create(list), do: Enum.reduce(list, nil, &(insert(&2, &1)))
+  def create(list) when is_list(list), do: Enum.reduce(list, nil, &(insert(&2, &1)))
 
   @doc """
   Balance a tree into an even distribution of left and right branches.
@@ -73,6 +73,10 @@ defmodule BinarySearchTree do
     - the current node
     - the current node's right tree
 
+  An inefficient version looks like this:
+
+  `in_order(node.left) ++ [node] ++ in_order(node.right)`
+
   ## Examples
 
       iex> [2, 1, 3]
@@ -85,14 +89,14 @@ defmodule BinarySearchTree do
   @spec in_order(tree) :: tree
   def in_order(tree), do: in_order([], tree) |> Enum.reverse
 
+  #
+  # [tree + LEFT] goes into +in_order(tree.right)+
+  # which adds itself to the head:
+  # [RIGHT + tree + LEFT]
+  # then we reverse it.
+  #
   defp in_order(acc, nil), do: acc
   defp in_order(acc, tree) do
-    #
-    # [tree + LEFT] goes into +in_order(tree.right)+
-    # which adds itself to the head:
-    # [RIGHT + tree + LEFT]
-    # then we reverse it.
-    #
     [tree | in_order(acc, tree.left)]
     |> in_order(tree.right)
   end
@@ -225,7 +229,15 @@ defmodule BinarySearchTree do
   """
   @spec next_smallest(node :: tree, root :: tree) :: tree
   @spec next_smallest(data :: integer, root :: tree) :: tree
-  def next_smallest(tree, root), do: nil
+  def next_smallest(%Node{left: node}, _) when is_map(node), do: largest(node)
+  def next_smallest(%Node{}=node, root), do: next_smallest(node, root, nil)
+  def next_smallest(data, root), do: find(root, data) |> next_smallest(root)
+
+  defp next_smallest(%Node{data: node_data}=tree, %Node{data: root_data, left: left}, successor)
+    when node_data > root_data, do: next_smallest(tree, left, successor)
+  defp next_smallest(%Node{data: node_data}=tree, %Node{data: root_data, right: right}=root, _)
+    when node_data < root_data, do: next_smallest(tree, right, root)
+  defp next_smallest(_, _, successor), do: successor
 
   @doc """
   Find the element with the next largest data given a node and the root node.
@@ -247,7 +259,15 @@ defmodule BinarySearchTree do
   """
   @spec next_largest(node :: tree, root :: tree) :: tree
   @spec next_largest(data :: integer, root :: tree) :: tree
-  def next_largest(tree, root), do: nil
+  def next_largest(%Node{right: node}, _) when is_map(node), do: smallest(node)
+  def next_largest(%Node{}=node, root), do: next_largest(node, root, nil)
+  def next_largest(data, root), do: find(root, data) |> next_largest(root)
+
+  defp next_largest(%Node{data: node_data, right: nil}=tree, %Node{data: root_data, right: right}=root, _)
+    when node_data > root_data, do: next_largest(tree, right, root)
+  defp next_largest(%Node{data: node_data, right: nil}=tree, %Node{data: root_data, left: left}, successor)
+    when node_data < root_data, do: next_largest(tree, left, successor)
+  defp next_largest(_, _, successor), do: successor
 
   @doc """
   Find the element with the largest data in the entire tree.
@@ -262,7 +282,9 @@ defmodule BinarySearchTree do
 
   """
   @spec largest(tree) :: tree
-  def largest(tree), do: nil
+  def largest(nil), do: nil
+  def largest(%Node{right: nil}=tree), do: tree
+  def largest(%Node{right: right}), do: largest(right)
 
   @doc """
   Find the element with the smallest data in the entire tree.
@@ -277,7 +299,9 @@ defmodule BinarySearchTree do
 
   """
   @spec smallest(tree) :: tree
-  def smallest(tree), do: nil
+  def smallest(nil), do: nil
+  def smallest(%Node{left: nil}=tree), do: tree
+  def smallest(%Node{left: left}), do: smallest(left)
 
   @doc """
   Delete a given element from the tree and move its children into place.
