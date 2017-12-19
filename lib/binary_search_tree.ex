@@ -83,7 +83,19 @@ defmodule BinarySearchTree do
 
   """
   @spec in_order(tree) :: tree
-  def in_order(tree), do: nil
+  def in_order(tree), do: in_order([], tree) |> Enum.reverse
+
+  defp in_order(acc, nil), do: acc
+  defp in_order(acc, tree) do
+    #
+    # [tree + LEFT] goes into +in_order(tree.right)+
+    # which adds itself to the head:
+    # [RIGHT + tree + LEFT]
+    # then we reverse it.
+    #
+    [tree | in_order(acc, tree.left)]
+    |> in_order(tree.right)
+  end
 
   @doc """
   Compile a pre-order collection of the tree's data.
@@ -104,7 +116,17 @@ defmodule BinarySearchTree do
 
   """
   @spec pre_order(tree) :: tree
-  def pre_order(tree), do: nil
+  def pre_order(tree), do: pre_order([], tree) |> Enum.reverse
+
+  defp pre_order(acc, nil), do: acc
+  defp pre_order(acc, tree) do
+    # we're collecting the nodes in reverse:
+    # RIGHT + LEFT + node
+    #
+    [tree | acc]
+    |> pre_order(tree.left)
+    |> pre_order(tree.right)
+  end
 
   @doc """
   Compile a post-order collection of the tree's data.
@@ -125,13 +147,25 @@ defmodule BinarySearchTree do
 
   """
   @spec post_order(tree) :: tree
-  def post_order(tree), do: nil
+  def post_order(tree), do: post_order([], tree) |> Enum.reverse
+
+  defp post_order(acc, nil), do: acc
+  defp post_order(acc, tree) do
+    [ tree |
+      post_order(acc, tree.left)
+      |> post_order(tree.right)
+    ]
+  end
 
   @doc """
   Compile a level-order collection of the tree's data.
 
   An level-order collection is made by recursively collecting each
   level of the tree.
+
+  If the current tree is not null, then add tree.left and tree.right
+  to the queue. Then pass that queue to +level_order+ with tree itself
+  added to the head of the accumulator.
 
   ## Examples
 
@@ -143,7 +177,14 @@ defmodule BinarySearchTree do
 
   """
   @spec level_order(tree) :: tree
-  def level_order(tree), do: nil
+  def level_order(tree), do: level_order([tree], []) |> Enum.reverse
+
+  defp level_order([], acc), do: acc
+  defp level_order([nil|queue], acc), do: level_order(queue, acc)
+  defp level_order([tree|queue], acc) do
+    queue ++ [tree.left, tree.right]
+    |> level_order([tree|acc])
+  end
 
   @doc """
   Find an element in the tree with the given data.
