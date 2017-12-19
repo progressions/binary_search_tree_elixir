@@ -358,11 +358,22 @@ defmodule BinarySearchTree do
       ...> BinarySearchTree.compare(tree_a, tree_b)
       false
 
+      # Trees with the same structure but different values
+      # are not the same.
+
+      iex> tree_a = [3, 4, 2]
+      ...> |> BinarySearchTree.create
+      iex> tree_b = [2, 3, 1]
+      ...> |> BinarySearchTree.create
+      ...> BinarySearchTree.compare(tree_a, tree_b)
+      false
+
   """
   @spec compare(tree, tree) :: tree
   def compare(nil, nil), do: true
   def compare(nil, _), do: false
   def compare(_, nil), do: false
+  def compare(%Node{data: data_a}, %Node{data: data_b}) when data_a != data_b, do: false
   def compare(node1, node2) do
     compare(node1.left, node2.left)
     && compare(node1.right, node2.right)
