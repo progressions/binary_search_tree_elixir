@@ -105,6 +105,10 @@ defmodule BinarySearchTreeTest do
     assert BinarySearchTree.next_smallest(state.node_15, state.tree).data == 10
   end
 
+  test "next_largest of node 10 is 15", state do
+    assert BinarySearchTree.next_largest(10, state.tree).data == 15
+  end
+
   test "next_largest of 10 is 15", state do
     assert BinarySearchTree.next_largest(state.node_10, state.tree).data == 15
   end
