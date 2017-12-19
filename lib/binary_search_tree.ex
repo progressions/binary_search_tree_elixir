@@ -18,7 +18,7 @@ defmodule BinarySearchTree do
 
       iex> BinarySearchTree.insert(nil, 10)
       ...> |> BinarySearchTree.insert(15)
-      %BinarySearchTree.Node{data: 10, left: nil, 
+      %BinarySearchTree.Node{data: 10, left: nil,
                 right: %BinarySearchTree.Node{data: 15, left: nil, right: nil}}
 
   """
@@ -37,8 +37,8 @@ defmodule BinarySearchTree do
 
       iex> [3, 4, 2]
       ...> |> BinarySearchTree.create
-      %BinarySearchTree.Node{data: 3, 
-                    left: %BinarySearchTree.Node{data: 2, left: nil, right: nil}, 
+      %BinarySearchTree.Node{data: 3,
+                    left: %BinarySearchTree.Node{data: 2, left: nil, right: nil},
                     right: %BinarySearchTree.Node{data: 4, left: nil, right: nil}}
   """
   @spec create(list) :: tree
