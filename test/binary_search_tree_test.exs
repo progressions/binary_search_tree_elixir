@@ -35,6 +35,15 @@ defmodule BinarySearchTreeTest do
     assert BinarySearchTree.insert(node, 9).left.data == 9
   end
 
+  test "insert same value" do
+    node = BinarySearchTree.insert(nil, 10)
+    assert BinarySearchTree.insert(node, 10) == node
+  end
+
+  test "create tree from list" do
+    assert BinarySearchTree.create([2,1,3]) == "whut"
+  end
+
   test "balance", state do
     balanced_tree = BinarySearchTree.balance(state.tree)
     assert BinarySearchTree.level_order(balanced_tree) |> Enum.map(&(&1.data)) == [15, 0, 21, -6, 10, 19]
@@ -135,9 +144,7 @@ defmodule BinarySearchTreeTest do
   test "compare two identical trees", state do
     tree = BinarySearchTree.level_order(state.tree)
     |> Enum.map(&(&1.data))
-    |> Enum.reduce(nil, fn(data, root) ->
-      BinarySearchTree.insert(root, data)
-    end)
+    |> BinarySearchTree.create
     assert BinarySearchTree.compare(state.tree, tree) == true
   end
 
