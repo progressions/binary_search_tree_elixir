@@ -2,6 +2,7 @@ defmodule BinarySearchTree do
   defmodule Node do
     defstruct data: nil, left: nil, right: nil
   end
+  @type tree :: %BinarySearchTree.Node{}
 
   @moduledoc """
   Documentation for BinarySearchTree.
@@ -21,6 +22,7 @@ defmodule BinarySearchTree do
                 right: %BinarySearchTree.Node{data: 15, left: nil, right: nil}}
 
   """
+  @spec insert(tree :: tree, data :: integer) :: tree
   def insert(nil, data), do: %Node{data: data}
   def insert(%Node{data: node_data}=node, data) when data > node_data, do:
     %Node{data: node.data, left: node.left, right: insert(node.right, data)}
@@ -39,6 +41,7 @@ defmodule BinarySearchTree do
                     left: %BinarySearchTree.Node{data: 2, left: nil, right: nil}, 
                     right: %BinarySearchTree.Node{data: 4, left: nil, right: nil}}
   """
+  @spec create(list) :: tree
   def create(list), do: list |> Enum.reduce(nil, &(insert(&2, &1)))
 
   @doc """
@@ -54,6 +57,7 @@ defmodule BinarySearchTree do
       [2, 1, 3]
 
   """
+  @spec balance(tree) :: tree
   def balance(node) when is_map(node), do: balance(in_order(node))
   def balance([]), do: nil
   def balance([node]), do: %Node{data: node.data, left: nil, right: nil}
@@ -82,6 +86,7 @@ defmodule BinarySearchTree do
       [1, 2, 3]
 
   """
+  @spec in_order(tree) :: tree
   def in_order(node) do
     in_order([], node)
     |> Enum.reverse
@@ -111,6 +116,7 @@ defmodule BinarySearchTree do
       [2, 1, 3]
 
   """
+  @spec pre_order(tree) :: tree
   def pre_order(node) do
     pre_order([], node)
     |> Enum.reverse
@@ -141,6 +147,7 @@ defmodule BinarySearchTree do
       [1, 3, 2]
 
   """
+  @spec post_order(tree) :: tree
   def post_order(node) do
     post_order([], node)
     |> Enum.reverse
@@ -168,6 +175,7 @@ defmodule BinarySearchTree do
       [2, 1, 3, -5, 4]
 
   """
+  @spec level_order(tree) :: tree
   def level_order(node), do: Enum.reverse(level_order([node], []))
 
   defp level_order([], acc), do: acc
@@ -190,6 +198,7 @@ defmodule BinarySearchTree do
       %BinarySearchTree.Node{data: 3, left: nil, right: nil}
 
   """
+  @spec find(node :: tree, data :: integer) :: tree
   def find(%Node{data: data}=node, data), do: node
   def find(nil, _), do: nil
   def find(%Node{left: left, right: right}, data) do
@@ -215,6 +224,8 @@ defmodule BinarySearchTree do
       1
 
   """
+  @spec next_smallest(node :: tree, root :: tree) :: tree
+  @spec next_smallest(data :: integer, root :: tree) :: tree
   def next_smallest(%Node{left: node}, _) when is_map(node), do: largest(node)
   def next_smallest(%Node{}=node, root), do: next_smallest(node, root, nil)
   def next_smallest(data, root), do: find(root, data) |> next_smallest(root)
@@ -243,6 +254,8 @@ defmodule BinarySearchTree do
       ...> node.data
       2
   """
+  @spec next_largest(node :: tree, root :: tree) :: tree
+  @spec next_largest(data :: integer, root :: tree) :: tree
   def next_largest(%Node{right: node}, _) when is_map(node), do: smallest(node)
   def next_largest(%Node{}=node, root), do: next_largest(node, root, nil)
   def next_largest(data, root), do: find(root, data) |> next_largest(root)
@@ -265,6 +278,7 @@ defmodule BinarySearchTree do
       3
 
   """
+  @spec largest(tree) :: tree
   def largest(%Node{right: nil}=node), do: node
   def largest(%Node{right: node}), do: largest(node)
 
@@ -280,6 +294,7 @@ defmodule BinarySearchTree do
       1
 
   """
+  @spec smallest(tree) :: tree
   def smallest(%Node{left: nil}=node), do: node
   def smallest(%Node{left: node}), do: smallest(node)
 
@@ -304,6 +319,8 @@ defmodule BinarySearchTree do
       nil
 
   """
+  @spec delete(root :: tree, data :: integer) :: tree
+  @spec delete(root :: tree, node :: tree) :: tree
   def delete(root, data), do: delete(nil, root, data)
   defp delete(acc, nil, _), do: acc
   defp delete(acc, %Node{data: data, left: nil, right: nil}, data), do: acc
@@ -343,6 +360,7 @@ defmodule BinarySearchTree do
       false
 
   """
+  @spec compare(tree, tree) :: tree
   def compare(nil, nil), do: true
   def compare(nil, _), do: false
   def compare(_, nil), do: false
@@ -362,6 +380,7 @@ defmodule BinarySearchTree do
       6
 
   """
+  @spec sum(tree) :: integer
   def sum(node), do: sum(0, node)
   defp sum(acc, nil), do: acc
   defp sum(acc, %Node{data: data, left: left, right: right}) do
