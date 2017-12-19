@@ -142,8 +142,7 @@ defmodule BinarySearchTreeTest do
   end
 
   test "compare two identical trees", state do
-    tree = BinarySearchTree.level_order(state.tree)
-    |> Enum.map(&(&1.data))
+    tree = [10, -6, 19, 0, 15, 21]
     |> BinarySearchTree.create
     assert BinarySearchTree.compare(state.tree, tree) == true
   end
