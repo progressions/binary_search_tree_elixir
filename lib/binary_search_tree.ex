@@ -320,7 +320,6 @@ defmodule BinarySearchTree do
 
   """
   @spec delete(root :: tree, data :: integer) :: tree
-  @spec delete(root :: tree, node :: tree) :: tree
   def delete(root, data), do: delete(nil, root, data)
   defp delete(acc, nil, _), do: acc
   defp delete(acc, %Node{data: data, left: nil, right: nil}, data), do: acc
