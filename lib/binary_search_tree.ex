@@ -15,6 +15,11 @@ defmodule BinarySearchTree do
       iex> BinarySearchTree.insert(nil, 10)
       %BinarySearchTree.Node{data: 10, left: nil, right: nil}
 
+      iex> BinarySearchTree.insert(nil, 10)
+      ...> |> BinarySearchTree.insert(15)
+      %BinarySearchTree.Node{data: 10, left: nil, 
+                right: %BinarySearchTree.Node{data: 15, left: nil, right: nil}}
+
   """
   def insert(nil, data), do: %Node{data: data}
   def insert(%Node{data: node_data}=node, data) when data > node_data, do:
@@ -24,7 +29,29 @@ defmodule BinarySearchTree do
   def insert(node, _), do: node
 
   @doc """
+  Create a tree from a list.
+
+  ## Examples
+
+      iex> [3, 4, 2]
+      ...> |> BinarySearchTree.create
+      %BinarySearchTree.Node{data: 3, 
+                    left: %BinarySearchTree.Node{data: 2, left: nil, right: nil}, 
+                    right: %BinarySearchTree.Node{data: 4, left: nil, right: nil}}
+  """
+  def create(list), do: list |> Enum.reduce(nil, &(insert(&2, &1)))
+
+  @doc """
   Balance a tree into an even distribution of left and right branches.
+
+  ## Examples
+
+      iex> [1, 2, 3]
+      ...> |> BinarySearchTree.create
+      ...> |> BinarySearchTree.balance
+      ...> |> BinarySearchTree.level_order
+      ...> |> Enum.map(&(&1.data))
+      [2, 1, 3]
 
   """
   def balance(node) when is_map(node), do: balance(in_order(node))
@@ -46,6 +73,14 @@ defmodule BinarySearchTree do
     - the current node
     - the current node's right tree
 
+  ## Examples
+
+      iex> [2, 1, 3]
+      ...> |> BinarySearchTree.create
+      ...> |> BinarySearchTree.in_order
+      ...> |> Enum.map(&(&1.data))
+      [1, 2, 3]
+
   """
   def in_order(node) do
     in_order([], node)
@@ -66,6 +101,14 @@ defmodule BinarySearchTree do
     - the current node
     - the current node's left tree
     - the current node's right tree
+
+  ## Examples
+
+      iex> [2, 1, 3]
+      ...> |> BinarySearchTree.create
+      ...> |> BinarySearchTree.pre_order
+      ...> |> Enum.map(&(&1.data))
+      [2, 1, 3]
 
   """
   def pre_order(node) do
@@ -89,6 +132,14 @@ defmodule BinarySearchTree do
     - the current node's right tree
     - the current node
 
+  ## Examples
+
+      iex> [2, 1, 3]
+      ...> |> BinarySearchTree.create
+      ...> |> BinarySearchTree.post_order
+      ...> |> Enum.map(&(&1.data))
+      [1, 3, 2]
+
   """
   def post_order(node) do
     post_order([], node)
@@ -108,6 +159,14 @@ defmodule BinarySearchTree do
   An level-order collection is made by recursively collecting each
   level of the tree.
 
+  ## Examples
+
+      iex> [2, 1, 3, 4, -5]
+      ...> |> BinarySearchTree.create
+      ...> |> BinarySearchTree.level_order
+      ...> |> Enum.map(&(&1.data))
+      [2, 1, 3, -5, 4]
+
   """
   def level_order(node), do: Enum.reverse(level_order([node], []))
 
@@ -123,6 +182,13 @@ defmodule BinarySearchTree do
   @doc """
   Find an element in the tree with the given data.
 
+  ## Examples
+
+      iex> [2, 1, 3]
+      ...> |> BinarySearchTree.create
+      ...> |> BinarySearchTree.find(3)
+      %BinarySearchTree.Node{data: 3, left: nil, right: nil}
+
   """
   def find(%Node{data: data}=node, data), do: node
   def find(nil, _), do: nil
@@ -133,9 +199,25 @@ defmodule BinarySearchTree do
   @doc """
   Find the element with the next smallest data given a node and the root node.
 
+  ## Examples
+
+      iex> tree = [2, 1, 3]
+      ...> |> BinarySearchTree.create
+      ...> node = BinarySearchTree.find(tree, 2)
+      ...> |> BinarySearchTree.next_smallest(tree)
+      ...> node.data
+      1
+
+      iex> tree = [2, 1, 3]
+      ...> |> BinarySearchTree.create
+      ...> node = BinarySearchTree.next_smallest(2, tree)
+      ...> node.data
+      1
+
   """
   def next_smallest(%Node{left: node}, _) when is_map(node), do: largest(node)
-  def next_smallest(node, root), do: next_smallest(node, root, nil)
+  def next_smallest(%Node{}=node, root), do: next_smallest(node, root, nil)
+  def next_smallest(data, root), do: find(root, data) |> next_smallest(root)
 
   defp next_smallest(%Node{data: node_data}=node, %Node{data: root_data, left: left}, successor)
     when node_data < root_data, do: next_smallest(node, left, successor)
@@ -146,9 +228,24 @@ defmodule BinarySearchTree do
   @doc """
   Find the element with the next largest data given a node and the root node.
 
+  ## Examples
+
+      iex> tree = [2, 1, 3]
+      ...> |> BinarySearchTree.create
+      ...> node = BinarySearchTree.find(tree, 1)
+      ...> |> BinarySearchTree.next_largest(tree)
+      ...> node.data
+      2
+
+      iex> tree = [2, 1, 3]
+      ...> |> BinarySearchTree.create
+      ...> node = BinarySearchTree.next_largest(1, tree)
+      ...> node.data
+      2
   """
   def next_largest(%Node{right: node}, _) when is_map(node), do: smallest(node)
-  def next_largest(node, root), do: next_largest(node, root, nil)
+  def next_largest(%Node{}=node, root), do: next_largest(node, root, nil)
+  def next_largest(data, root), do: find(root, data) |> next_largest(root)
 
   defp next_largest(%Node{data: node_data}=node, %Node{data: root_data, left: left}=root, _)
     when node_data < root_data, do: next_largest(node, left, root)
@@ -159,12 +256,28 @@ defmodule BinarySearchTree do
   @doc """
   Find the element with the largest data in the entire tree.
 
+  ## Examples
+
+      iex> node = [2, 3, 1]
+      ...> |> BinarySearchTree.create
+      ...> |> BinarySearchTree.largest
+      ...> node.data
+      3
+
   """
   def largest(%Node{right: nil}=node), do: node
   def largest(%Node{right: node}), do: largest(node)
 
   @doc """
   Find the element with the smallest data in the entire tree.
+
+  ## Examples
+
+      iex> node = [2, 3, 1]
+      ...> |> BinarySearchTree.create
+      ...> |> BinarySearchTree.smallest
+      ...> node.data
+      1
 
   """
   def smallest(%Node{left: nil}=node), do: node
@@ -174,6 +287,21 @@ defmodule BinarySearchTree do
   Delete a given element from the tree and move its children into place.
 
   Return a new version of the tree without the element in place.
+
+  ## Examples
+
+      iex> [2, 3, 1]
+      ...> |> BinarySearchTree.create
+      ...> |> BinarySearchTree.delete(2)
+      ...> |> BinarySearchTree.in_order
+      ...> |> Enum.map(&(&1.data))
+      [1, 3]
+
+      iex> [2, 3, 1]
+      ...> |> BinarySearchTree.create
+      ...> |> BinarySearchTree.delete(2)
+      ...> |> BinarySearchTree.find(2)
+      nil
 
   """
   def delete(root, data), do: delete(nil, root, data)
@@ -198,6 +326,22 @@ defmodule BinarySearchTree do
   @doc """
   Compare two trees and return true if they are identical in values and structure.
 
+  ## Examples
+
+      iex> tree_a = [2, 3, 1]
+      ...> |> BinarySearchTree.create
+      iex> tree_b = [2, 3, 1]
+      ...> |> BinarySearchTree.create
+      ...> BinarySearchTree.compare(tree_a, tree_b)
+      true
+
+      iex> tree_a = [2, 3, 1]
+      ...> |> BinarySearchTree.create
+      iex> tree_b = [3, 2, 1]
+      ...> |> BinarySearchTree.create
+      ...> BinarySearchTree.compare(tree_a, tree_b)
+      false
+
   """
   def compare(nil, nil), do: true
   def compare(nil, _), do: false
@@ -209,6 +353,13 @@ defmodule BinarySearchTree do
 
   @doc """
   Sum the values of all the nodes in the tree.
+
+  ## Examples
+
+      iex> [2, 1, 3]
+      ...> |> BinarySearchTree.create
+      ...> |> BinarySearchTree.sum
+      6
 
   """
   def sum(node), do: sum(0, node)
