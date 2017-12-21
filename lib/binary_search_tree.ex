@@ -390,6 +390,11 @@ defmodule BinarySearchTree do
       ...> |> BinarySearchTree.sum
       6
 
+      iex> []
+      ...> |> BinarySearchTree.create
+      ...> |> BinarySearchTree.sum
+      0
+
   """
   @spec sum(tree) :: integer
   def sum(node), do: sum(0, node)
