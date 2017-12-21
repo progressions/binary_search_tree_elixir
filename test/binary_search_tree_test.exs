@@ -37,10 +37,10 @@ defmodule BinarySearchTreeTest do
   end
 
   test "balance a very unbalanced tree" do
-    tree = Enum.to_list(0..9)
+    balanced_tree = 0..9
     |> BinarySearchTree.create
+    |> BinarySearchTree.balance
 
-    balanced_tree = BinarySearchTree.balance(tree)
     assert BinarySearchTree.level_order(balanced_tree) |> Enum.map(&(&1.data)) == [5, 2, 8, 1, 4, 7, 9, 0, 3, 6]
     assert BinarySearchTree.in_order(balanced_tree) |> Enum.map(&(&1.data)) == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
   end
@@ -64,11 +64,9 @@ defmodule BinarySearchTreeTest do
   test "you can rebuild the tree from the level_order traversal", state do
     tree = BinarySearchTree.level_order(state.tree)
     |> Enum.map(&(&1.data))
-    |> Enum.reduce(nil, fn(data, node) ->
-      BinarySearchTree.insert(node, data)
-    end)
+    |> BinarySearchTree.create
 
-    assert BinarySearchTree.level_order(tree) |> Enum.map(&(&1.data)) == [10, -6, 19, 0, 15, 21]
+    assert tree == state.tree
   end
 
   test "find data in self" do
