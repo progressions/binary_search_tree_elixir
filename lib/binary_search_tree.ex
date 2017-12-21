@@ -436,4 +436,30 @@ defmodule BinarySearchTree do
       height(tree.right)
     )
   end
+
+  @doc """
+  Return the number of nodes in the tree.
+
+  ## Examples
+
+      iex> [2]
+      ...> |> BinarySearchTree.create
+      ...> |> BinarySearchTree.size
+      1
+
+      iex> [2, 1, 3]
+      ...> |> BinarySearchTree.create
+      ...> |> BinarySearchTree.size
+      3
+
+  """
+  @spec size(tree) :: integer
+  def size(tree), do: size(0, tree)
+
+  defp size(acc, nil), do: acc
+  defp size(acc, tree) do
+    acc + 1
+    |> size(tree.left)
+    |> size(tree.right)
+  end
 end
