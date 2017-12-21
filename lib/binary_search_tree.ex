@@ -19,7 +19,7 @@ defmodule BinarySearchTree do
       iex> BinarySearchTree.insert(nil, 10)
       ...> |> BinarySearchTree.insert(15)
       %BinarySearchTree.Node{data: 10, left: nil,
-                right: %BinarySearchTree.Node{data: 15, left: nil, right: nil}}
+        right: %BinarySearchTree.Node{data: 15, left: nil, right: nil}}
 
   """
   @spec insert(tree :: tree, data :: integer) :: tree
@@ -38,8 +38,8 @@ defmodule BinarySearchTree do
       iex> [3, 4, 2]
       ...> |> BinarySearchTree.create
       %BinarySearchTree.Node{data: 3,
-                    left: %BinarySearchTree.Node{data: 2, left: nil, right: nil},
-                    right: %BinarySearchTree.Node{data: 4, left: nil, right: nil}}
+        left: %BinarySearchTree.Node{data: 2, left: nil, right: nil},
+        right: %BinarySearchTree.Node{data: 4, left: nil, right: nil}}
   """
   @spec create(list) :: tree
   def create(list), do: list |> Enum.reduce(nil, &(insert(&2, &1)))
@@ -212,16 +212,14 @@ defmodule BinarySearchTree do
 
       iex> tree = [2, 1, 3]
       ...> |> BinarySearchTree.create
-      ...> node = BinarySearchTree.find(tree, 2)
+      ...> BinarySearchTree.find(tree, 2)
       ...> |> BinarySearchTree.next_smallest(tree)
-      ...> node.data
-      1
+      %BinarySearchTree.Node{data: 1, left: nil, right: nil}
 
       iex> tree = [2, 1, 3]
       ...> |> BinarySearchTree.create
-      ...> node = BinarySearchTree.next_smallest(2, tree)
-      ...> node.data
-      1
+      ...> BinarySearchTree.next_smallest(2, tree)
+      %BinarySearchTree.Node{data: 1, left: nil, right: nil}
 
   """
   @spec next_smallest(node :: tree, root :: tree) :: tree
@@ -243,16 +241,18 @@ defmodule BinarySearchTree do
 
       iex> tree = [2, 1, 3]
       ...> |> BinarySearchTree.create
-      ...> node = BinarySearchTree.find(tree, 1)
+      ...> BinarySearchTree.find(tree, 1)
       ...> |> BinarySearchTree.next_largest(tree)
-      ...> node.data
-      2
+      %BinarySearchTree.Node{data: 2,
+        left: %BinarySearchTree.Node{data: 1, left: nil, right: nil},
+        right: %BinarySearchTree.Node{data: 3, left: nil, right: nil}}
 
       iex> tree = [2, 1, 3]
       ...> |> BinarySearchTree.create
-      ...> node = BinarySearchTree.next_largest(1, tree)
-      ...> node.data
-      2
+      ...> BinarySearchTree.next_largest(1, tree)
+      %BinarySearchTree.Node{data: 2,
+        left: %BinarySearchTree.Node{data: 1, left: nil, right: nil},
+        right: %BinarySearchTree.Node{data: 3, left: nil, right: nil}}
   """
   @spec next_largest(node :: tree, root :: tree) :: tree
   @spec next_largest(data :: integer, root :: tree) :: tree
@@ -271,11 +271,10 @@ defmodule BinarySearchTree do
 
   ## Examples
 
-      iex> node = [2, 3, 1]
+      iex> [2, 3, 1]
       ...> |> BinarySearchTree.create
       ...> |> BinarySearchTree.largest
-      ...> node.data
-      3
+      %BinarySearchTree.Node{data: 3, left: nil, right: nil}
 
   """
   @spec largest(tree) :: tree
@@ -287,11 +286,10 @@ defmodule BinarySearchTree do
 
   ## Examples
 
-      iex> node = [2, 3, 1]
+      iex> [2, 3, 1]
       ...> |> BinarySearchTree.create
       ...> |> BinarySearchTree.smallest
-      ...> node.data
-      1
+      %BinarySearchTree.Node{data: 1, left: nil, right: nil}
 
   """
   @spec smallest(tree) :: tree
@@ -308,9 +306,9 @@ defmodule BinarySearchTree do
       iex> [2, 3, 1]
       ...> |> BinarySearchTree.create
       ...> |> BinarySearchTree.delete(2)
-      ...> |> BinarySearchTree.in_order
-      ...> |> Enum.map(&(&1.data))
-      [1, 3]
+      %BinarySearchTree.Node{data: 3,
+        left: %BinarySearchTree.Node{data: 1, left: nil, right: nil},
+        right: nil}
 
       iex> [2, 3, 1]
       ...> |> BinarySearchTree.create
@@ -346,6 +344,7 @@ defmodule BinarySearchTree do
 
       iex> tree_a = [2, 3, 1]
       ...> |> BinarySearchTree.create
+      ...>
       iex> tree_b = [2, 3, 1]
       ...> |> BinarySearchTree.create
       ...> BinarySearchTree.compare(tree_a, tree_b)
@@ -353,6 +352,7 @@ defmodule BinarySearchTree do
 
       iex> tree_a = [2, 3, 1]
       ...> |> BinarySearchTree.create
+      ...>
       iex> tree_b = [3, 2, 1]
       ...> |> BinarySearchTree.create
       ...> BinarySearchTree.compare(tree_a, tree_b)
@@ -363,6 +363,7 @@ defmodule BinarySearchTree do
 
       iex> tree_a = [3, 4, 2]
       ...> |> BinarySearchTree.create
+      ...>
       iex> tree_b = [2, 3, 1]
       ...> |> BinarySearchTree.create
       ...> BinarySearchTree.compare(tree_a, tree_b)
