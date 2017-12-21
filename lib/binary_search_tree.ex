@@ -371,13 +371,15 @@ defmodule BinarySearchTree do
 
   """
   @spec compare(tree, tree) :: tree
-  def compare(nil, nil), do: true
-  def compare(nil, _), do: false
-  def compare(_, nil), do: false
-  def compare(%Node{data: data_a}, %Node{data: data_b}) when data_a != data_b, do: false
-  def compare(node1, node2) do
-    compare(node1.left, node2.left)
-    && compare(node1.right, node2.right)
+  def compare(tree_a, tree_b), do: compare(true, tree_a, tree_b)
+
+  defp compare(acc, nil, nil), do: acc
+  defp compare(_, nil, _), do: false
+  defp compare(_, _, nil), do: false
+  defp compare(_, %Node{data: data_a}, %Node{data: data_b}) when data_a != data_b, do: false
+  defp compare(acc, node1, node2) do
+    compare(acc, node1.left, node2.left)
+    |> compare(node1.right, node2.right)
   end
 
   @doc """
