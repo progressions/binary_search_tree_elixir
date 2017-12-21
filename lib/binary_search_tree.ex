@@ -9,7 +9,7 @@ defmodule BinarySearchTree do
   """
 
   @doc """
-  Insert data into a tree.
+  Inserts data into a tree.
 
   ## Examples
 
@@ -45,7 +45,7 @@ defmodule BinarySearchTree do
   def create(list), do: list |> Enum.reduce(nil, &(insert(&2, &1)))
 
   @doc """
-  Balance a tree into an even distribution of left and right branches.
+  Balances a tree into an even distribution of left and right branches.
 
   ## Examples
 
@@ -69,7 +69,7 @@ defmodule BinarySearchTree do
   end
 
   @doc """
-  Compile an in-order collection of the tree's data.
+  Compiles an in-order collection of the tree's data.
 
   An in-order collection is made by recursively collecting:
 
@@ -99,9 +99,9 @@ defmodule BinarySearchTree do
   end
 
   @doc """
-  Compile a pre-order collection of the tree's data.
+  Compiles a pre-order collection of the tree's data.
 
-  An pre-order collection is made by recursively collecting:
+  A pre-order collection is made by recursively collecting:
 
     - the current node
     - the current node's left tree
@@ -130,7 +130,7 @@ defmodule BinarySearchTree do
   end
 
   @doc """
-  Compile a post-order collection of the tree's data.
+  Compiles a post-order collection of the tree's data.
 
   An post-order collection is made by recursively collecting:
 
@@ -161,7 +161,7 @@ defmodule BinarySearchTree do
   end
 
   @doc """
-  Compile a level-order collection of the tree's data.
+  Compiles a level-order collection of the tree's data.
 
   An level-order collection is made by recursively collecting each
   level of the tree.
@@ -188,7 +188,7 @@ defmodule BinarySearchTree do
   end
 
   @doc """
-  Find an element in the tree with the given data.
+  Finds an element in the tree with the given data.
 
   ## Examples
 
@@ -206,7 +206,7 @@ defmodule BinarySearchTree do
   end
 
   @doc """
-  Find the element with the next smallest data given a node and the root node.
+  Finds the element with the next smallest data given a node and the root node.
 
   ## Examples
 
@@ -235,7 +235,7 @@ defmodule BinarySearchTree do
   defp next_smallest(_, _, successor), do: successor
 
   @doc """
-  Find the element with the next largest data given a node and the root node.
+  Finds the element with the next largest data given a node and the root node.
 
   ## Examples
 
@@ -267,7 +267,7 @@ defmodule BinarySearchTree do
   defp next_largest(_, _, successor), do: successor
 
   @doc """
-  Find the element with the largest data in the entire tree.
+  Finds the element with the largest data in the entire tree.
 
   ## Examples
 
@@ -282,7 +282,7 @@ defmodule BinarySearchTree do
   def largest(%Node{right: node}), do: largest(node)
 
   @doc """
-  Find the element with the smallest data in the entire tree.
+  Finds the element with the smallest data in the entire tree.
 
   ## Examples
 
@@ -297,7 +297,7 @@ defmodule BinarySearchTree do
   def smallest(%Node{left: node}), do: smallest(node)
 
   @doc """
-  Delete a given element from the tree and move its children into place.
+  Deletes a given element from the tree and move its children into place.
 
   Return a new version of the tree without the element in place.
 
@@ -338,7 +338,7 @@ defmodule BinarySearchTree do
   end
 
   @doc """
-  Compare two trees and return true if they are identical in values and structure.
+  Compares two trees and return true if they are identical in values and structure.
 
   ## Examples
 
@@ -383,7 +383,7 @@ defmodule BinarySearchTree do
   end
 
   @doc """
-  Sum the values of all the nodes in the tree.
+  Sums the values of all the nodes in the tree.
 
   ## Examples
 
@@ -399,16 +399,52 @@ defmodule BinarySearchTree do
 
   """
   @spec sum(tree) :: integer
-  def sum(node), do: sum(0, node)
-  defp sum(acc, nil), do: acc
-  defp sum(acc, %Node{data: data, left: left, right: right}) do
-    acc + data
-    |> sum(left)
-    |> sum(right)
+  def sum(tree), do: reduce(tree, 0, fn(t, acc) -> acc + t.data end)
+
+  @doc """
+  Return the number of nodes in the tree.
+
+  ## Examples
+
+      iex> [2]
+      ...> |> BinarySearchTree.create
+      ...> |> BinarySearchTree.size
+      1
+
+      iex> [2, 1, 3]
+      ...> |> BinarySearchTree.create
+      ...> |> BinarySearchTree.size
+      3
+
+  """
+  @spec size(tree) :: integer
+  def size(tree), do: reduce(tree, 0, fn(_, acc) -> acc + 1 end)
+
+  @doc """
+  Invokes `fun` for each node in the `tree` with the accumulator.
+
+  The initial value of the accumulator is `acc`. The function is invoked for
+  each node in the tree with the accumulator. The result returned
+  by the function is used as the accumulator for the next iteration.
+  The function returns the last accumulator.
+
+  ## Examples
+
+      iex> [2, 1, 3]
+      ...> |> BinarySearchTree.create
+      ...> |> BinarySearchTree.reduce(0, fn(t, acc) -> acc + t.data end)
+      6
+
+  """
+  def reduce(nil, acc, _fun), do: acc
+  def reduce(tree, acc, fun) do
+    a = fun.(tree, acc)
+    b = reduce(tree.left, a, fun)
+    reduce(tree.right, b, fun)
   end
 
   @doc """
-  Return the height of the tree.
+  Returns the height of the tree.
 
   ## Examples
 
@@ -435,31 +471,5 @@ defmodule BinarySearchTree do
       height(tree.left),
       height(tree.right)
     )
-  end
-
-  @doc """
-  Return the number of nodes in the tree.
-
-  ## Examples
-
-      iex> [2]
-      ...> |> BinarySearchTree.create
-      ...> |> BinarySearchTree.size
-      1
-
-      iex> [2, 1, 3]
-      ...> |> BinarySearchTree.create
-      ...> |> BinarySearchTree.size
-      3
-
-  """
-  @spec size(tree) :: integer
-  def size(tree), do: size(0, tree)
-
-  defp size(acc, nil), do: acc
-  defp size(acc, tree) do
-    acc + 1
-    |> size(tree.left)
-    |> size(tree.right)
   end
 end
