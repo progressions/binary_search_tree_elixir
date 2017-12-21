@@ -3,12 +3,8 @@ defmodule BinarySearchTreeTest do
   doctest BinarySearchTree
 
   setup do
-    tree = BinarySearchTree.insert(nil, 10)
-    |> BinarySearchTree.insert(19)
-    |> BinarySearchTree.insert(-6)
-    |> BinarySearchTree.insert(21)
-    |> BinarySearchTree.insert(15)
-    |> BinarySearchTree.insert(0)
+    tree = [10, -6, 19, 0, 15, 21]
+    |> BinarySearchTree.create
 
     node_21 = BinarySearchTree.find(tree, 21)
     node_19 = BinarySearchTree.find(tree, 19)
@@ -42,13 +38,11 @@ defmodule BinarySearchTreeTest do
 
   test "balance a very unbalanced tree" do
     tree = Enum.to_list(0..9)
-    |> Enum.reduce(nil, fn(data, root) ->
-      BinarySearchTree.insert(root, data)
-    end)
+    |> BinarySearchTree.create
 
     balanced_tree = BinarySearchTree.balance(tree)
     assert BinarySearchTree.level_order(balanced_tree) |> Enum.map(&(&1.data)) == [5, 2, 8, 1, 4, 7, 9, 0, 3, 6]
-    assert BinarySearchTree.in_order(balanced_tree) |> Enum.map(&(&1.data)) == [0,1,2,3,4,5,6,7,8,9]
+    assert BinarySearchTree.in_order(balanced_tree) |> Enum.map(&(&1.data)) == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
   end
 
   test "in_order traversal", state do
@@ -135,17 +129,13 @@ defmodule BinarySearchTreeTest do
   test "compare two identical trees", state do
     tree = BinarySearchTree.level_order(state.tree)
     |> Enum.map(&(&1.data))
-    |> Enum.reduce(nil, fn(data, root) ->
-      BinarySearchTree.insert(root, data)
-    end)
+    |> BinarySearchTree.create
     assert BinarySearchTree.compare(state.tree, tree) == true
   end
 
   test "compare two slightly different trees", state do
     tree = [10, -6, 19, 15, 21]
-    |> Enum.reduce(nil, fn(data, root) ->
-      BinarySearchTree.insert(root, data)
-    end)
+    |> BinarySearchTree.create
     assert BinarySearchTree.compare(state.tree, tree) == false
   end
 
