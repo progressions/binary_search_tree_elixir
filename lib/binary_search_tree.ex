@@ -370,7 +370,7 @@ defmodule BinarySearchTree do
       false
 
   """
-  @spec compare(tree, tree) :: tree
+  @spec compare(tree, tree) :: boolean
   def compare(tree_a, tree_b), do: compare(true, tree_a, tree_b)
 
   defp compare(acc, nil, nil), do: acc
