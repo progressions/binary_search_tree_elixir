@@ -406,4 +406,34 @@ defmodule BinarySearchTree do
     |> sum(left)
     |> sum(right)
   end
+
+  @doc """
+  Return the height of the tree.
+
+  ## Examples
+
+      iex> [2]
+      ...> |> BinarySearchTree.create
+      ...> |> BinarySearchTree.height
+      1
+
+      iex> [2, 1, 3]
+      ...> |> BinarySearchTree.create
+      ...> |> BinarySearchTree.height
+      2
+
+      iex> [1, 2, 3]
+      ...> |> BinarySearchTree.create
+      ...> |> BinarySearchTree.height
+      3
+
+  """
+  @spec height(tree) :: integer
+  def height(nil), do: 0
+  def height(tree) do
+    1 + max(
+      height(tree.left),
+      height(tree.right)
+    )
+  end
 end
