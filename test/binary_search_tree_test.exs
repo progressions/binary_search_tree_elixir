@@ -152,4 +152,12 @@ defmodule BinarySearchTreeTest do
   test "sum the tree", state do
     assert BinarySearchTree.sum(state.tree) == 59
   end
+
+  test "return the height of tree", state do
+    assert BinarySearchTree.height(state.tree) == 3
+  end
+
+  test "return the size of tree", state do
+    assert BinarySearchTree.size(state.tree) == 6
+  end
 end
