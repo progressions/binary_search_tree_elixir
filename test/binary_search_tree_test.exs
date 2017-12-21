@@ -157,7 +157,15 @@ defmodule BinarySearchTreeTest do
     assert BinarySearchTree.height(state.tree) == 3
   end
 
+  test "return the height of empty tree" do
+    assert BinarySearchTree.height(nil) == 0
+  end
+
   test "return the size of tree", state do
     assert BinarySearchTree.size(state.tree) == 6
+  end
+
+  test "return the size of empty tree" do
+    assert BinarySearchTree.size(nil) == 0
   end
 end
