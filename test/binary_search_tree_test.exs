@@ -162,8 +162,10 @@ defmodule BinarySearchTreeTest do
   end
 
   test "reduce operates on every node", state do
-    assert BinarySearchTree.reduce(state.tree, 0, fn(tree, acc) -> acc + tree.data end) == 59
     assert BinarySearchTree.reduce(state.tree, 0, fn(_, acc) -> acc + 1 end) == 6
+  end
+
+  test "reduce counts number of nodes with data below zero", state do
     assert BinarySearchTree.reduce(state.tree, 0, fn(tree, acc) ->
       cond do
         tree.data < 0 ->
