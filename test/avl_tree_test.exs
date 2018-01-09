@@ -9,17 +9,17 @@ defmodule AvlTreeTest do
   end
 
   test "insert_with_height needs balancing on left" do
-    {_, height} = AvlTree.insert(nil, 1)
+    {_, {l, r}} = AvlTree.insert(nil, 1)
     |> AvlTree.insert_with_height(2)
 
-    assert height == 2
+    assert {l, r} == {0, 1}
   end
 
   test "insert_with_height needs balancing on right" do
-    {_, height} = AvlTree.insert(nil, 3)
+    {_, {l, r}} = AvlTree.insert(nil, 3)
     |> AvlTree.insert_with_height(2)
 
-    assert height == 2
+    assert {l, r} == {1, 0}
   end
 
 end

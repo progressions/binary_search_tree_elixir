@@ -19,7 +19,10 @@ defmodule AvlTree do
   """
   @spec insert(tree :: tree, data :: integer) :: tree
   def insert(tree, data) do
-    {result, _} = insert_with_height(tree, data)
+    left_height = height(tree.left)
+    right_height = height(tree.right)
+
+    {result, _} = insert_with_height({tree, {left_height, right_height}}, data)
 
     result
   end
@@ -35,27 +38,30 @@ defmodule AvlTree do
     end
   end
 
-  def insert_with_height(nil, data), do: {%Node{data: data}, 1}
+  def insert_with_height(nil, data), do: {%Node{data: data}, {0,0}}
   def insert_with_height(%Node{data: node_data}=node, data) when data > node_data do
-    {right, right_height} = insert_with_height(node.right, data)
-    left_height = height(node.left)
+    {right, {l,r}} = insert_with_height(node.right, data)
 
-    check_height(left_height, right_height)
+    IO.inspect {l, r}
 
-    {%Node{data: node.data, left: node.left, right: right}, right_height+1}
+    {%Node{data: node.data, left: node.left, right: right}, {l ,r+1}}
   end
   def insert_with_height(%Node{data: node_data}=node, data) when data < node_data do
-    {left, left_height} = insert_with_height(node.left, data)
-    right_height = height(node.right)
+    {left, {l,r}} = insert_with_height(node.left, data)
 
-    check_height(left_height, right_height)
+    IO.inspect {l, r}
 
-    {%Node{data: node.data, left: left, right: node.right}, left_height+1}
+    {%Node{data: node.data, left: left, right: node.right}, {l+1, r}}
   end
-  def insert_with_height(node, _), do: {node, height(node)}
+  def insert_with_height(node, _), do: {node, {0,0}}
 
   @doc """
-  Rotates a node right-right.
+  Rotates a tree right-right.
+
+  A tree requires right-right rotation when the difference between the height of its
+  left and right trees is more than one, with the larger number being on the right side,
+  and then the difference of the right tree's left and right trees is more than one,
+  with the larger number being on the right tree's right side.
 
   ## Examples
 
@@ -76,7 +82,12 @@ defmodule AvlTree do
   end
 
   @doc """
-  Rotates a node right-left.
+  Rotates a tree right-left.
+
+  A tree requires right-left rotation when the difference between the height of its
+  left and right trees is more than one, with the larger number being on the right side,
+  and then the difference of the right tree's left and right trees is more than one,
+  with the larger number being on the right tree's left side.
 
   ## Examples
 
@@ -99,7 +110,12 @@ defmodule AvlTree do
   end
 
   @doc """
-  Rotates a node left-left.
+  Rotates a tree left-left.
+
+  A tree requires left-left rotation when the difference between the height of its
+  left and right trees is more than one, with the larger number being on the left side,
+  and then the difference of the left tree's left and right trees is more than one,
+  with the larger number being on the left tree's left side.
 
   ## Examples
 
@@ -121,6 +137,11 @@ defmodule AvlTree do
 
   @doc """
   Rotates a node left-right.
+
+  A tree requires left-left rotation when the difference between the height of its
+  left and right trees is more than one, with the larger number being on the left side,
+  and then the difference of the left tree's left and right trees is more than one,
+  with the larger number being on the left tree's right side.
 
   ## Examples
 
